@@ -11,8 +11,8 @@ var n                = d.getTimezoneOffset() * MIN
 
 var post_created     = ''
 
-async function start (blockNum, author, permlink) {
-	return new Promise((resolve, reject) => {
+function start (blockNum, author, permlink) {
+	return new Promise(async (resolve, reject) => {
 		let block = {}
 		if (first_run) {
 			console.log('first run')

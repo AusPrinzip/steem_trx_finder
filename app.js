@@ -4,8 +4,6 @@ const MIN            = 60 * 1000
 const SEC            = 1000
 const  sec_per_block = 3
 
-var first_run        = true
-
 var d                = new Date()
 var n                = d.getTimezoneOffset() * MIN
 
@@ -13,8 +11,8 @@ var post_created     = ''
 
 function start (author, permlink, blockNum) {
 	return new Promise(async (resolve, reject) => {
-		let block = {}
-		if (first_run) {
+		let block     = {}
+		if (!blockNum) {
 			// console.log('first run')
 			let res      = await client.database.call('get_content', [author, permlink])
 			post_created = res.created

@@ -53,7 +53,14 @@ function start (author, permlink, blockNum) {
 								if (op[0] == 'custom_json' && op[1].id == 'likwid-beneficiary') {
 									let json = JSON.parse(op[1].json)
 									// console.log(json)
-									return resolve(json)
+									let beneficiaries = []
+									try {
+										beneficiaries = json.beneficiaries
+									} catch(e) {
+										console.log(e)
+										return reject('custom_json detected but missing beneficiaries array')
+									}
+									return resolve(beneficiaries)
 								}
 							})
 						}

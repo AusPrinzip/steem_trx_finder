@@ -31,19 +31,11 @@ function start (author, permlink, blockNum) {
 		if (timediff > 3) {
 			let block_delta = timediff / sec_per_block
 			console.log('block_delta = ' + block_delta)
-<<<<<<< HEAD
-			return start(author, permlink, blockNum - block_delta)
-		} else if (timediff < 0) {
-			let block_delta = timediff / sec_per_block
-			console.log('block_delta = ' + block_delta)
-			return start(author, permlink, blockNum - block_delta)
-=======
 			return start(author, permlink, blockNum - block_delta).then((res) => { return resolve(res)})
 		} else if (timediff < 0) {
 			let block_delta = timediff / sec_per_block
 			console.log('block_delta = ' + block_delta)
 			return start(author, permlink, blockNum - block_delta).then((res) => { return resolve(res)})
->>>>>>> e36f6a5564399a1c6ee119be54180171b73be5bb
 		} else {
 			console.log('bingo, origin TRX has been found')
 			let block = await client.database.getBlock(blockNum + 1)

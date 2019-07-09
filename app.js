@@ -37,7 +37,7 @@ function start (author, permlink, blockNum) {
 			console.log('block_delta = ' + block_delta)
 			return start(author, permlink, blockNum - block_delta).then((res) => { return resolve(res)})
 		} else {
-			console.log('bingo, origin TRX has been found')
+			console.log('bingo, origin BLOCK has been found')
 			let block = await client.database.getBlock(blockNum + 1)
 			let trxs = block.transactions
 			trxs.forEach((trx) => {
@@ -45,6 +45,7 @@ function start (author, permlink, blockNum) {
 					if (op[0] == 'comment') {
 						// console.log(op[1].permlink)
 						if (op[1].permlink == permlink) {
+							console.log('bingo, TRX has been found')
 							// console.log('bingo, permlink has been found')
 							// console.log(op[1].permlink)
 							trx.operations.forEach((op) => {
@@ -61,6 +62,7 @@ function start (author, permlink, blockNum) {
 									return resolve(beneficiaries)
 								}
 							})
+							return resolve(trx)
 						}
 					}
 				})

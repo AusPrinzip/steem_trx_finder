@@ -10,15 +10,6 @@ var n                = d.getTimezoneOffset() * MIN
 
 var post_created     = ''
 
-async function test() {
-	let client = new dsteem.Client('https://api.steemit.com')
-	let permlink = 'announced-the-results-and-honored-the-game-guess-winner-24-7-2019'
-	let author = 'elysemauzy'
-	findCommentTrx(client, author, permlink)
-	.then((res) => console.log(res))
-	.catch((e) => console.log(e))
-}
-test()
 function findCommentTrx (client, author, permlink, blockNum, last_block_delta) {
 	console.log('starting...')
 	return new Promise(async (resolve, reject) => {
@@ -57,8 +48,8 @@ function findCommentTrx (client, author, permlink, blockNum, last_block_delta) {
 				console.log(blockNum)
 				console.log(blockNum - block_delta)
 				console.log('** loop detected **')
+				block_delta++
 			}
-			block_delta++
 			return findCommentTrx(client, author, permlink, blockNum - block_delta, block_delta).then((res) => { return resolve(res)})
 		} else {
 			console.log('origin BLOCK has been found')

@@ -16,6 +16,7 @@ function findCommentTrx (client, author, permlink, blockNum) {
 			// console.log('first run')
 			let res      = await client.database.call('get_content', [author, permlink])
 			post_created = res.created
+			console.log(res)
 			post_created = new Date(Date.parse(post_created) - n)
 			
 			block        = await client.blockchain.getCurrentBlockHeader()
@@ -25,17 +26,20 @@ function findCommentTrx (client, author, permlink, blockNum) {
 			block = await client.database.getBlockHeader(blockNum)
 		}
 		// console.log('\n ** blockNum = ' + blockNum + ' **')
+		// console.log(block)
 		let block_time = new Date(Date.parse(block.timestamp) - n)
 		let timediff = (block_time - post_created) / 1000
+		// console.log('block_time ' + block_time)
+		// console.log('post_created ' + post_created)
 		// console.log('timediff = ' + timediff + ' sec')
 		if (timediff > 3) {
 			let block_delta = timediff / sec_per_block
 			console.log('block_delta = ' + block_delta)
-			return start(author, permlink, blockNum - block_delta).then((res) => { return resolve(res)})
+			return findCommentTrx(client, author, permlink, blockNum - block_delta).then((res) => { return resolve(res)})
 		} else if (timediff < 0) {
 			let block_delta = timediff / sec_per_block
 			console.log('block_delta = ' + block_delta)
-			return start(author, permlink, blockNum - block_delta).then((res) => { return resolve(res)})
+			return findCommentTrx(client, author, permlink, blockNum - block_delta).then((res) => { return resolve(res)})
 		} else {
 			console.log('origin BLOCK has been found')
 			let block = await client.database.getBlock(blockNum + 1)

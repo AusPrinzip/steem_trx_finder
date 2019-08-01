@@ -1,24 +1,38 @@
-// const dsteem         = require('dsteem')
+const dsteem         = require('dsteem')
 // const client         = new dsteem.Client('https://api.steemit.com')
 const MIN            = 60 * 1000
 const SEC            = 1000
 const  sec_per_block = 3
+const YEAR 			 = 12 * 30 * 24 * 60 * 60 * 1000
 
 var d                = new Date()
 var n                = d.getTimezoneOffset() * MIN
 
 var post_created     = ''
 
-function findCommentTrx (client, author, permlink, blockNum) {
+async function test() {
+	let client = new dsteem.Client('https://api.steemit.com')
+	let permlink = 'announced-the-results-and-honored-the-game-guess-winner-24-7-2019'
+	let author = 'elysemauzy'
+	findCommentTrx(client, author, permlink)
+	.then((res) => console.log(res))
+	.catch((e) => console.log(e))
+}
+test()
+function findCommentTrx (client, author, permlink, blockNum, last_block_delta) {
+	console.log('starting...')
 	return new Promise(async (resolve, reject) => {
 		let block     = {}
 		if (!blockNum) {
 			// console.log('first run')
 			let res      = await client.database.call('get_content', [author, permlink])
+			console.log('')
 			post_created = res.created
-			console.log(res)
 			post_created = new Date(Date.parse(post_created) - n)
-			
+			let post_age = new Date() - new Date(post_created)
+
+			if (post_age > 3 * YEAR) return reject('post date error: older than 3 years')
+
 			block        = await client.blockchain.getCurrentBlockHeader()
 			blockNum     = await client.blockchain.getCurrentBlockNum()
 			first_run    = false
@@ -35,11 +49,17 @@ function findCommentTrx (client, author, permlink, blockNum) {
 		if (timediff > 3) {
 			let block_delta = timediff / sec_per_block
 			console.log('block_delta = ' + block_delta)
-			return findCommentTrx(client, author, permlink, blockNum - block_delta).then((res) => { return resolve(res)})
+			return findCommentTrx(client, author, permlink, blockNum - block_delta, block_delta).then((res) => { return resolve(res)})
 		} else if (timediff < 0) {
 			let block_delta = timediff / sec_per_block
 			console.log('block_delta = ' + block_delta)
-			return findCommentTrx(client, author, permlink, blockNum - block_delta).then((res) => { return resolve(res)})
+			if (block_delta == -last_block_delta) {
+				console.log(blockNum)
+				console.log(blockNum - block_delta)
+				console.log('** loop detected **')
+			}
+			block_delta++
+			return findCommentTrx(client, author, permlink, blockNum - block_delta, block_delta).then((res) => { return resolve(res)})
 		} else {
 			console.log('origin BLOCK has been found')
 			let block = await client.database.getBlock(blockNum + 1)
@@ -70,6 +90,7 @@ function findCommentTrx (client, author, permlink, blockNum) {
 					}
 				})
 			})
+			console.log('trx could not be found')
 			return resolve()
 		}
 	})

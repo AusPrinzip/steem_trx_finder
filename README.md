@@ -1,7 +1,7 @@
 
 ## Use
 
-STEEM rpc-api does provide only a *pseudo-transaction* object at get_account_history request. This is the form of the returned object:
+STEEM rpc-api at `get_account_history` does provide only a *pseudo-transaction* object. This is the form of the returned object:
 ```
 [
   31896,
@@ -36,3 +36,5 @@ $ npm i steemtrxfinder --save
 ```
 
 ## Configuration
+
+TBD

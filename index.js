@@ -75,7 +75,7 @@ function findCommentTrx (client, author, permlink, blockNum, last_block_delta) {
 	})
 }
 
-function findVoteTrx (trans, _client) {
+function findVoteTrx (_client, trans) {
 	return new Promise(async (resolve, reject) => {
 		// console.log(trans.op[1])
 		let blockNum = trans.block

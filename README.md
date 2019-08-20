@@ -1,5 +1,7 @@
 ## Use
+
 There are two methods available:
+
 * findCommentTrx
 * findVoteTrx
 

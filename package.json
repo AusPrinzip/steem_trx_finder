@@ -1,7 +1,7 @@
 {
   "name": "steemtrxfinder",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.2",
+  "description": "find complete TRX object from permlink or vote",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

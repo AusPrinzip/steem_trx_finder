@@ -1,4 +1,4 @@
-const dsteem         = require('dsteem')
+
 const MIN            = 60 * 1000
 const SEC            = 1000
 const  sec_per_block = 3
@@ -75,13 +75,12 @@ function findCommentTrx (client, author, permlink, blockNum, last_block_delta) {
 	})
 }
 
-function findVoteTrx (_client, trans) {
+function findVoteTrx (client, pseudo_trx) {
 	return new Promise(async (resolve, reject) => {
-		// console.log(trans.op[1])
-		let blockNum = trans.block
+		let blockNum = pseudo_trx[1].block
 		let block
 		try { 
-			block = await _client.database.getBlock(blockNum)
+			block = await client.database.getBlock(blockNum)
 		} catch(e) {
 			return reject(e)
 		}
@@ -89,7 +88,7 @@ function findVoteTrx (_client, trans) {
 		trxs.forEach((trx) => {
 			trx.operations.forEach((op) => {
 				if (op[0] == 'vote') {
-					if ( JSON.stringify(op[1]) === JSON.stringify(trans.op[1]) ) {
+					if ( JSON.stringify(op[1]) === JSON.stringify(pseudo_trx[1].op[1]) ) {
 						return resolve(trx)
 					}
 				}

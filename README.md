@@ -1,3 +1,4 @@
+
 ## Use
 
 STEEM rpc-api does provide only a *pseudo-transaction* object at get_account_history request. This is the form of the returned object:

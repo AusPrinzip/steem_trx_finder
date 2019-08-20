@@ -1,5 +1,5 @@
 
-## Use
+## Purpose
 
 STEEM rpc-api  database call `get_account_history` does provide only a *pseudo-transaction* object. This is the form of the returned object:
 ```
@@ -24,6 +24,18 @@ This pseudo-transaction object is missing valuable information such as:
 * ref_block_prefix
 
 If you need the full trx object, this library will help you.
+
+## Use 
+
+This library has been design with async requests in mind. 
+
+If you want to initialise a dsteem client:
+```
+var dsteem = require('dsteem')
+var client = new dsteem.client(rpc_node_address)
+````
+
+Each method call requires a client instance passed as argument.
 
 There are two methods available:
 

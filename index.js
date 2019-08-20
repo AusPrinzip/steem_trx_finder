@@ -10,7 +10,6 @@ var n                = d.getTimezoneOffset() * MIN
 var post_created     = ''
 
 function findCommentTrx (client, author, permlink, blockNum, last_block_delta) {
-	console.log('starting...')
 	return new Promise(async (resolve, reject) => {
 		let block     = {}
 		if (!blockNum) {

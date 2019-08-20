@@ -1,7 +1,7 @@
 
 ## Use
 
-STEEM rpc-api at `get_account_history` does provide only a *pseudo-transaction* object. This is the form of the returned object:
+STEEM rpc-api  database call `get_account_history` does provide only a *pseudo-transaction* object. This is the form of the returned object:
 ```
 [
   31896,

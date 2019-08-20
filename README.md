@@ -1,5 +1,5 @@
 
-## Use
+## Use
 
 STEEM rpc-api does provide only a *pseudo-transaction* object at get_account_history request. This is the form of the returned object:
 ```
@@ -27,8 +27,8 @@ If you need the full trx object, this library will help you.
 
 There are two methods available:
 
-* findCommentTrx
-* findVoteTrx
+* findCommentTrx(client, author, permlink)
+* findVoteTrx(client, pseudo_trx)
 
 ## Install
 ```

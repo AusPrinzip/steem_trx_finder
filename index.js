@@ -90,12 +90,12 @@ function findVoteTrx (client, pseudo_trx) {
 			trx.operations.forEach((op) => {
 				if (op[0] == 'vote') {
 					if ( JSON.stringify(op[1]) === JSON.stringify(pseudo_trx[1].op[1]) ) {
-						return resolve(trx)
+						return trx
 					}
 				}
 			})
 		})
-		return reject()
+		throw new Error()
 	})
 }
 

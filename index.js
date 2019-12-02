@@ -9,7 +9,7 @@ var n                = d.getTimezoneOffset() * MIN
 
 var post_created     = ''
 
-function findBlockNumber (author, permlink) {
+function findBlockNumber (client, author, permlink) {
 	return new Promise((resolve, reject) => {
 		client.database.call('get_content', [author, permlink])
 		.then((res) => {
@@ -31,7 +31,7 @@ function findBlockNumber (author, permlink) {
 async function findCommentTrx (client, author, permlink, blockNum, last_block_delta) {
 	if (!blockNum) {
 		first_run    = false
-		blockNum = await findBlockNumber(author, permlink)
+		blockNum = await findBlockNumber(client, author, permlink)
 	} 
 	let block = await client.database.getBlockHeader(blockNum)
 	let block_time = new Date(Date.parse(block.timestamp) - n)

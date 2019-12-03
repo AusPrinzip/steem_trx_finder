@@ -1,13 +1,13 @@
 {
   "name": "steemtrxfinder",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "find complete TRX object from permlink or vote",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Daniel Martinez",
+  "license": "UNLICENSED",
   "dependencies": {
     "dsteem": "^0.11.3",
     "np": "^5.2.1"

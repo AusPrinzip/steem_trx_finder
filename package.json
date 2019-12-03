@@ -9,7 +9,6 @@
   "author": "Daniel Martinez",
   "license": "UNLICENSED",
   "dependencies": {
-    "dsteem": "^0.11.3",
     "np": "^5.2.1"
   }
 }

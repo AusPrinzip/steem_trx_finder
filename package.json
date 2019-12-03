@@ -1,6 +1,6 @@
 {
   "name": "steemtrxfinder",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "find complete TRX object from permlink or vote",
   "main": "index.js",
   "scripts": {

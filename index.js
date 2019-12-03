@@ -16,8 +16,7 @@ function findBlockNumber (client, author, permlink) {
 			post_created = res.created
 			post_created = new Date(Date.parse(post_created) - n)
 			let post_age = new Date() - new Date(post_created)
-
-			if (post_age > 3 * YEAR) return reject('post date error: older than 3 years')
+			if (post_age > 3 * YEAR) return reject('warning: post older than 3 years')
 
 			// block        = await client.blockchain.getCurrentBlockHeader()
 			client.blockchain.getCurrentBlockNum()
@@ -26,6 +25,24 @@ function findBlockNumber (client, author, permlink) {
 			})
 		})
 	})
+}
+
+function findCustomJson (trx) {
+	for (let k = 0; k < trx.operations.length; k++) { 
+		let op = trx.operations[k]
+		console.log(JSON.stringify(op))
+		if (op[0] == 'custom_json' && op[1].id == 'likwid-beneficiary') {
+			let json = JSON.parse(op[1].json)
+			let beneficiaries = []
+			try {
+				beneficiaries = json.beneficiaries
+			} catch(e) {
+				console.log(e)
+				throw new Error('custom_json detected but missing beneficiaries array')
+			}
+			return beneficiaries
+		}
+	}
 }
 
 async function findCommentTrx (client, author, permlink, blockNum, last_block_delta) {
@@ -39,7 +56,7 @@ async function findCommentTrx (client, author, permlink, blockNum, last_block_de
 	if (timediff > 3) {
 		let block_delta = timediff / sec_per_block
 		console.log('block_delta = ' + block_delta)
-		return findCommentTrx(client, author, permlink, blockNum - block_delta, block_delta).then((res) => { return res})
+		return findCommentTrx(client, author, permlink, blockNum - block_delta, block_delta).then((res) => { return res })
 	} else if (timediff < 0) {
 		let block_delta = timediff / sec_per_block
 		console.log('block_delta = ' + block_delta)
@@ -49,33 +66,22 @@ async function findCommentTrx (client, author, permlink, blockNum, last_block_de
 			console.log('** loop detected **')
 			block_delta++
 		}
-		return findCommentTrx(client, author, permlink, blockNum - block_delta, block_delta).then((res) => { return res})
+		return findCommentTrx(client, author, permlink, blockNum - block_delta, block_delta).then((res) => { return res })
 	} else {
 		console.log('origin BLOCK has been found')
 		block = await client.database.getBlock(blockNum + 1)
 		let trxs = block.transactions
-		trxs.forEach((trx) => {
-			trx.operations.forEach((op) => {
-				if (op[0] == 'comment') {
-					if (op[1].permlink == permlink) {
-						console.log('bingo, TRX has been found')
-						trx.operations.forEach((op) => {
-							if (op[0] == 'custom_json' && op[1].id == 'likwid-beneficiary') {
-								let json = JSON.parse(op[1].json)
-								let beneficiaries = []
-								try {
-									beneficiaries = json.beneficiaries
-								} catch(e) {
-									console.log(e)
-									throw new Error('custom_json detected but missing beneficiaries array')
-								}
-								return beneficiaries
-							}
-						})
-					}
+		for (let i = 0; i < trxs.length; i++) { 
+			let trx = trxs[i]
+			// console.log(JSON.stringify(trx))
+			for (let j = 0; j < trx.operations.length; j++) { 
+				let op = trx.operations[j]
+				if (op[0] == 'comment' && op[1].permlink == permlink) {
+					console.log('bingo, COMMENT_OP has been found')
+					return findCustomJson(trx)
 				}
-			})
-		})
+			}
+		}
 		console.log('trx could not be found')
 	}
 }
